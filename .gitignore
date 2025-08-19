@@ -43,3 +43,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security and Environment Files
+.env
+.env.local
+.env.production
+*.key
+*.pem
+secrets/
+config/secrets.dart
+lib/config/env_config.dart

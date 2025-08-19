@@ -2,6 +2,23 @@
 
 A new Flutter project.
 
+## Backend Setup (Firebase + Cloudinary)
+
+1) Firebase
+- Install Firebase CLI and FlutterFire: `dart pub global activate flutterfire_cli`
+- Login: `firebase login`
+- Configure: `flutterfire configure` (select this project)
+- Deploy rules: `firebase deploy --only firestore:rules`
+
+2) Cloudinary
+- Create account and an unsigned upload preset
+- Set values in `lib/config/cloudinary_config.dart`
+
+3) Run
+- Fetch deps: `flutter pub get`
+- Run: `flutter run`
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

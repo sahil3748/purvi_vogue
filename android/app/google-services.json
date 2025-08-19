@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1085054651658",
+    "project_id": "purvi-vogue",
+    "storage_bucket": "purvi-vogue.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085054651658:android:9f9b9dcabcaac243c23ef3",
+        "android_client_info": {
+          "package_name": "com.example.purvi_vogue"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXOO3DM17-qi1rYxBYnjLD3fdNDqPrybg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
