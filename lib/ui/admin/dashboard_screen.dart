@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:purvi_vogue/config/cloudinary_config.dart';
+import 'package:purvi_vogue/config/theme_config.dart';
 import 'package:purvi_vogue/models/category.dart';
 import 'package:purvi_vogue/models/product.dart';
 import 'package:purvi_vogue/services/cloudinary_service.dart';
@@ -648,25 +649,95 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: PurviVogueColors.softBeige,
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
-        backgroundColor: Colors.white,
+        backgroundColor: PurviVogueColors.deepNavy,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: PurviVogueColors.white),
             onPressed: _signOut,
             tooltip: 'Sign Out',
           ),
         ],
       ),
-      body: Row(
-        children: [
-          // Sidebar Navigation
-          Container(
-            width: 250,
-            color: Colors.white,
+      body: ResponsiveUtils.isMobile(context) 
+          ? _buildMobileLayout(context)
+          : _buildDesktopLayout(context),
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context) {
+    return Column(
+      children: [
+        // Mobile Header
+        Container(
+          padding: const EdgeInsets.all(16),
+          color: PurviVogueColors.white,
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: PurviVogueColors.roseGold.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.admin_panel_settings,
+                  color: PurviVogueColors.roseGold,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Purvi Vogue Admin',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: PurviVogueColors.deepNavy,
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Mobile Navigation
+        Container(
+          color: PurviVogueColors.white,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                _buildMobileNavItem('Dashboard', Icons.dashboard, 0),
+                const SizedBox(width: 8),
+                _buildMobileNavItem('Add Product', Icons.add_circle, 1),
+                const SizedBox(width: 8),
+                _buildMobileNavItem('Products', Icons.inventory, 2),
+                const SizedBox(width: 8),
+                _buildMobileNavItem('Categories', Icons.category, 3),
+                const SizedBox(width: 8),
+                _buildMobileNavItem('Orders', Icons.shopping_cart, 4),
+                const SizedBox(width: 8),
+                _buildMobileNavItem('Analytics', Icons.analytics, 5),
+              ],
+            ),
+          ),
+        ),
+        // Mobile Content
+        Expanded(
+          child: _buildContent(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Row(
+      children: [
+        // Sidebar Navigation
+        Container(
+          width: 250,
+          color: PurviVogueColors.white,
             child: Column(
               children: [
                 Container(
@@ -676,12 +747,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade100,
+                          color: PurviVogueColors.roseGold.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           Icons.admin_panel_settings,
-                          color: Colors.blue.shade700,
+                          color: PurviVogueColors.roseGold,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -690,6 +761,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: PurviVogueColors.deepNavy,
                         ),
                       ),
                     ],
@@ -738,13 +810,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           // Main Content
           Expanded(
-            child: _selectedIndex == 0
-                ? _buildDashboardContent()
-                : _selectedIndex == 1
-                    ? _buildAddProductForm()
-                    : _buildDashboardContent(), // Placeholder for other sections
+            child: _buildContent(context),
           ),
         ],
+      );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return _selectedIndex == 0
+        ? _buildDashboardContent()
+        : _selectedIndex == 1
+            ? _buildAddProductForm()
+            : _buildDashboardContent(); // Placeholder for other sections
+  }
+
+  Widget _buildMobileNavItem(String title, IconData icon, int index) {
+    final isSelected = _selectedIndex == index;
+    return GestureDetector(
+      onTap: () {
+        if (index == 2) {
+          Navigator.of(context).pushNamed('/admin/products');
+        } else if (index == 3) {
+          Navigator.of(context).pushNamed('/admin/categories');
+        } else {
+          setState(() => _selectedIndex = index);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? PurviVogueColors.roseGold : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? PurviVogueColors.white : PurviVogueColors.charcoalBlack.withOpacity(0.6),
+              size: 20,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 10,
+                color: isSelected ? PurviVogueColors.white : PurviVogueColors.charcoalBlack.withOpacity(0.6),
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -754,17 +870,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? Colors.blue.shade600 : Colors.grey.shade600,
+        color: isSelected ? PurviVogueColors.roseGold : PurviVogueColors.charcoalBlack.withOpacity(0.6),
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? Colors.blue.shade600 : Colors.grey.shade800,
+          color: isSelected ? PurviVogueColors.roseGold : PurviVogueColors.charcoalBlack,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),
       selected: isSelected,
-      selectedTileColor: Colors.blue.shade50,
+      selectedTileColor: PurviVogueColors.roseGold.withOpacity(0.1),
       onTap: () {
         if (index == 2) {
           Navigator.of(context).pushNamed('/admin/products');
