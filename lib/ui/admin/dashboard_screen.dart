@@ -655,11 +655,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: PurviVogueColors.deepNavy,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: PurviVogueColors.white),
-            onPressed: _signOut,
-            tooltip: 'Sign Out',
-          ),
+          // Only show logout button on mobile
+          if (ResponsiveUtils.isMobile(context))
+            IconButton(
+              icon: const Icon(Icons.logout, color: PurviVogueColors.white),
+              onPressed: _signOut,
+              tooltip: 'Sign Out',
+            ),
         ],
       ),
       body: ResponsiveUtils.isMobile(context) 

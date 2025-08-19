@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purvi_vogue/services/auth_service.dart';
+import 'package:purvi_vogue/config/theme_config.dart';
 
 class AdminSetupScreen extends StatefulWidget {
   const AdminSetupScreen({super.key});
@@ -76,6 +77,90 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Redirect web users away from admin setup
+    if (!ResponsiveUtils.isMobile(context)) {
+      return Scaffold(
+        backgroundColor: PurviVogueColors.softBeige,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: ResponsiveUtils.getMaxContentWidth(context),
+            ),
+            child: Padding(
+              padding: ResponsiveUtils.getScreenPadding(context),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: PurviVogueColors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.admin_panel_settings,
+                          size: 64,
+                          color: PurviVogueColors.roseGold,
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Admin Setup Unavailable',
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: PurviVogueColors.deepNavy,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Admin functionality is only available on mobile devices for security reasons.',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: PurviVogueColors.charcoalBlack.withOpacity(0.7),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: PurviVogueColors.roseGold,
+                              foregroundColor: PurviVogueColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Back to Home',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

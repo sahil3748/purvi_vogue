@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:purvi_vogue/ui/router.dart';
 import 'package:purvi_vogue/config/theme_config.dart';
 import 'firebase_options.dart';
@@ -132,35 +129,36 @@ class LandingPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           
-                          // Admin Panel Button
-                          SizedBox(
-                            width: double.infinity,
-                            height: ResponsiveUtils.isMobile(context) ? 48 : 56,
-                            child: OutlinedButton(
-                              onPressed: () => Navigator.of(context).pushNamed('/admin/login'),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: PurviVogueColors.white,
-                                side: const BorderSide(color: PurviVogueColors.white, width: 2),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                          // Admin Panel Button - Only show on mobile
+                          if (ResponsiveUtils.isMobile(context))
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: OutlinedButton(
+                                onPressed: () => Navigator.of(context).pushNamed('/admin/login'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: PurviVogueColors.white,
+                                  side: const BorderSide(color: PurviVogueColors.white, width: 2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.admin_panel_settings),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'Admin Panel',
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.admin_panel_settings),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'Admin Panel',
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: ResponsiveUtils.isMobile(context) ? 14 : 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
