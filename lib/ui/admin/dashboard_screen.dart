@@ -271,11 +271,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               const SizedBox(width: 16),
               Expanded(
                 child: _buildActionCard(
-                  'Quick Stats',
-                  'View detailed analytics',
-                  Icons.analytics,
+                  'Test Cloudinary',
+                  'Debug upload configuration',
+                  Icons.science,
                   Colors.orange,
-                  () {}, // Placeholder for analytics
+                  () => Navigator.of(context).pushNamed('/admin/cloudinary-test'),
                 ),
               ),
             ],
