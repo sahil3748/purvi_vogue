@@ -6,6 +6,8 @@ import 'package:purvi_vogue/ui/admin/categories_screen.dart';
 import 'package:purvi_vogue/ui/admin/cloudinary_test_screen.dart';
 import 'package:purvi_vogue/ui/admin/dashboard_screen.dart';
 import 'package:purvi_vogue/ui/admin/products_list_screen.dart';
+import 'package:purvi_vogue/ui/admin/enhanced_product_form.dart';
+import 'package:purvi_vogue/ui/admin/enhanced_subcategory_form.dart';
 import 'package:purvi_vogue/ui/user/catalog_screen.dart';
 import 'package:purvi_vogue/ui/user/enhanced_catalog_screen.dart';
 
@@ -17,6 +19,10 @@ class AppRouter {
     '/admin/products': (_) => AdminWrapper(child: ProductsListScreen()),
     '/admin/categories': (_) => const AdminWrapper(child: CategoriesScreen()),
     '/admin/cloudinary-test': (_) => const AdminWrapper(child: CloudinaryTestScreen()),
+    '/admin/product/add': (_) => const EnhancedProductForm(),
+    '/admin/product/edit': (_) => const EnhancedProductForm(isEditing: true),
+    '/admin/subcategory/add': (_) => const EnhancedSubcategoryForm(),
+    '/admin/subcategory/edit': (_) => const EnhancedSubcategoryForm(isEditing: true),
     '/catalog': (_) => const EnhancedCatalogScreen(),
   };
 }

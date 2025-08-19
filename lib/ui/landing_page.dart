@@ -4,6 +4,8 @@ import 'package:purvi_vogue/ui/widgets/responsive_wrapper.dart';
 import 'package:purvi_vogue/ui/widgets/animated_category_card.dart';
 import 'package:purvi_vogue/ui/widgets/animated_button.dart';
 import 'package:purvi_vogue/ui/widgets/mobile_menu.dart';
+import 'package:purvi_vogue/services/firestore_service.dart';
+import 'package:purvi_vogue/models/category.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -21,6 +23,9 @@ class _LandingPageState extends State<LandingPage>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
   bool _showMobileMenu = false;
+  
+  List<CategoryModel> _categories = [];
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   void initState() {
@@ -50,6 +55,7 @@ class _LandingPageState extends State<LandingPage>
     );
 
     _startAnimations();
+    _loadCategories();
   }
 
   void _startAnimations() async {
@@ -59,6 +65,20 @@ class _LandingPageState extends State<LandingPage>
     _slideController.forward();
     await Future.delayed(const Duration(milliseconds: 300));
     _scaleController.forward();
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final categoriesStream = _firestoreService.watchCategories();
+      await for (final categories in categoriesStream) {
+        setState(() {
+          _categories = categories.take(3).toList(); // Take first 3 categories for display
+        });
+        break; // Take first snapshot
+      }
+    } catch (e) {
+      debugPrint('Error loading categories: $e');
+    }
   }
 
   @override
@@ -72,6 +92,7 @@ class _LandingPageState extends State<LandingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           Container(
@@ -422,42 +443,50 @@ class _LandingPageState extends State<LandingPage>
               ),
             ),
             const SizedBox(height: 48),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: ResponsiveUtils.isMobile(context) ? 2 : 3,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 24,
-              childAspectRatio: ResponsiveUtils.getCardAspectRatio(context),
-              children: [
-                AnimatedCategoryCard(
-                  title: 'NECKLACES',
-                  subtitle: 'Elegant designs',
-                  icon: Icons.diamond,
+            if (_categories.isNotEmpty)
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: ResponsiveUtils.isMobile(context) ? 2 : 3,
+                crossAxisSpacing: 24,
+                mainAxisSpacing: 24,
+                childAspectRatio: ResponsiveUtils.getCardAspectRatio(context),
+                children: _categories.map((category) {
+                  return AnimatedCategoryCard(
+                    title: category.name.toUpperCase(),
+                    subtitle: category.description ?? 'Explore collection',
+                    icon: Icons.category,
+                    color: _getCategoryColor(category.name),
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/catalog');
+                    },
+                  );
+                }).toList(),
+              )
+            else
+              Center(
+                child: CircularProgressIndicator(
                   color: PurviVogueColors.roseGold,
-                  onTap: () {},
                 ),
-                AnimatedCategoryCard(
-                  title: 'KURTIS',
-                  subtitle: 'Ethnic elegance',
-                  icon: Icons.style,
-                  color: PurviVogueColors.blushPink,
-                  onTap: () {},
-                ),
-                AnimatedCategoryCard(
-                  title: 'EARRINGS',
-                  subtitle: 'Timeless beauty',
-                  icon: Icons.auto_awesome,
-                  color: PurviVogueColors.deepNavy,
-                  onTap: () {},
-                ),
-              ],
-            ),
+              ),
             const SizedBox(height: 60),
           ],
         ),
       ),
     );
+  }
+
+  Color _getCategoryColor(String categoryName) {
+    final name = categoryName.toLowerCase();
+    if (name.contains('necklace') || name.contains('jewelry')) {
+      return PurviVogueColors.roseGold;
+    } else if (name.contains('kurti') || name.contains('dress')) {
+      return PurviVogueColors.blushPink;
+    } else if (name.contains('earring')) {
+      return PurviVogueColors.deepNavy;
+    } else {
+      return PurviVogueColors.roseGold;
+    }
   }
 
   Widget _buildAboutSection() {

@@ -3,6 +3,8 @@ import 'package:purvi_vogue/config/theme_config.dart';
 import 'package:purvi_vogue/ui/widgets/responsive_wrapper.dart';
 import 'package:purvi_vogue/models/product.dart';
 import 'package:purvi_vogue/models/category.dart';
+import 'package:purvi_vogue/models/subcategory.dart';
+import 'package:purvi_vogue/services/firestore_service.dart';
 
 class EnhancedCatalogScreen extends StatefulWidget {
   const EnhancedCatalogScreen({super.key});
@@ -19,18 +21,15 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
   late Animation<Offset> _slideAnimation;
   
   String _selectedCategory = 'All';
+  String _selectedSubcategory = 'All';
   String _searchQuery = '';
+  List<ProductModel> _allProducts = [];
   List<ProductModel> _filteredProducts = [];
+  List<CategoryModel> _categories = [];
+  List<SubcategoryModel> _subcategories = [];
   bool _isLoading = true;
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': '1', 'name': 'All', 'icon': Icons.all_inclusive},
-    {'id': '2', 'name': 'Necklaces', 'icon': Icons.diamond},
-    {'id': '3', 'name': 'Kurtis', 'icon': Icons.style},
-    {'id': '4', 'name': 'Earrings', 'icon': Icons.auto_awesome},
-    {'id': '5', 'name': 'Bracelets', 'icon': Icons.circle},
-    {'id': '6', 'name': 'Rings', 'icon': Icons.favorite},
-  ];
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   void initState() {
@@ -53,7 +52,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
     ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic));
 
     _startAnimations();
-    _loadProducts();
+    _loadData();
   }
 
   void _startAnimations() async {
@@ -63,109 +62,117 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
     _slideController.forward();
   }
 
-  void _loadProducts() async {
-    // Simulate loading
-    await Future.delayed(const Duration(seconds: 1));
-    
-    // Mock products data
-    final products = [
-      ProductModel(
-        id: '1',
-        name: 'Royal Gold Necklace',
-        description: 'Elegant gold necklace with intricate design',
-        priceRange: {'min': 299.99, 'max': 299.99},
-        categoryId: '2',
-        subCategoryId: 'necklaces',
-        gender: ['Women'],
-        imageUrls: ['https://via.placeholder.com/300x400/FFD700/000000?text=Necklace'],
-        tags: ['gold', 'necklace', 'elegant'],
-        material: '18K Gold',
-        inStock: true,
-      ),
-      ProductModel(
-        id: '2',
-        name: 'Silk Embroidered Kurti',
-        description: 'Beautiful silk kurti with hand embroidery',
-        priceRange: {'min': 89.99, 'max': 89.99},
-        categoryId: '3',
-        subCategoryId: 'kurtis',
-        gender: ['Women'],
-        imageUrls: ['https://via.placeholder.com/300x400/FF69B4/000000?text=Kurti'],
-        tags: ['silk', 'kurti', 'embroidery'],
-        material: 'Pure Silk',
-        inStock: true,
-      ),
-      ProductModel(
-        id: '3',
-        name: 'Pearl Drop Earrings',
-        description: 'Classic pearl drop earrings',
-        priceRange: {'min': 45.99, 'max': 45.99},
-        categoryId: '4',
-        subCategoryId: 'earrings',
-        gender: ['Women'],
-        imageUrls: ['https://via.placeholder.com/300x400/87CEEB/000000?text=Earrings'],
-        tags: ['pearl', 'earrings', 'classic'],
-        material: 'Freshwater Pearl',
-        inStock: true,
-      ),
-      ProductModel(
-        id: '4',
-        name: 'Diamond Stud Earrings',
-        description: 'Sparkling diamond studs',
-        priceRange: {'min': 199.99, 'max': 199.99},
-        categoryId: '4',
-        subCategoryId: 'earrings',
-        gender: ['Women'],
-        imageUrls: ['https://via.placeholder.com/300x400/C0C0C0/000000?text=Diamond'],
-        tags: ['diamond', 'earrings', 'sparkling'],
-        material: '14K White Gold',
-        inStock: true,
-      ),
-      ProductModel(
-        id: '5',
-        name: 'Silver Chain Bracelet',
-        description: 'Delicate silver chain bracelet',
-        priceRange: {'min': 35.99, 'max': 35.99},
-        categoryId: '5',
-        subCategoryId: 'bracelets',
-        gender: ['Women'],
-        imageUrls: ['https://via.placeholder.com/300x400/808080/000000?text=Bracelet'],
-        tags: ['silver', 'bracelet', 'delicate'],
-        material: '925 Sterling Silver',
-        inStock: true,
-      ),
-      ProductModel(
-        id: '6',
-        name: 'Rose Gold Ring',
-        description: 'Elegant rose gold ring',
-        priceRange: {'min': 79.99, 'max': 79.99},
-        categoryId: '6',
-        subCategoryId: 'rings',
-        gender: ['Women'],
-        imageUrls: ['https://via.placeholder.com/300x400/FFB6C1/000000?text=Ring'],
-        tags: ['rose gold', 'ring', 'elegant'],
-        material: '14K Rose Gold',
-        inStock: true,
-      ),
-    ];
+  void _loadData() async {
+    try {
+      // Load categories, subcategories, and products simultaneously
+      await Future.wait([
+        _loadCategories(),
+        _loadSubcategories(),
+        _loadProducts(),
+      ]);
+      
+      setState(() {
+        _isLoading = false;
+      });
+      
+      _filterProducts();
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle error
+      debugPrint('Error loading data: $e');
+    }
+  }
 
-    setState(() {
-      _filteredProducts = products;
-      _isLoading = false;
-    });
+  Future<void> _loadCategories() async {
+    try {
+      final categoriesStream = _firestoreService.watchCategories();
+      await for (final categories in categoriesStream) {
+        setState(() {
+          _categories = categories;
+        });
+        break; // Take first snapshot
+      }
+    } catch (e) {
+      debugPrint('Error loading categories: $e');
+    }
+  }
+
+  Future<void> _loadSubcategories() async {
+    try {
+      final subcategoriesStream = _firestoreService.watchSubcategories();
+      await for (final subcategories in subcategoriesStream) {
+        setState(() {
+          _subcategories = subcategories;
+        });
+        break; // Take first snapshot
+      }
+    } catch (e) {
+      debugPrint('Error loading subcategories: $e');
+    }
+  }
+
+  Future<void> _loadProducts() async {
+    try {
+      final productsStream = _firestoreService.watchProducts();
+      await for (final products in productsStream) {
+        setState(() {
+          _allProducts = products;
+        });
+        break; // Take first snapshot
+      }
+    } catch (e) {
+      debugPrint('Error loading products: $e');
+    }
   }
 
   void _filterProducts() {
     setState(() {
-      _filteredProducts = _filteredProducts.where((product) {
+      _filteredProducts = _allProducts.where((product) {
+        // Category filter
         final matchesCategory = _selectedCategory == 'All' || 
-            product.categoryId == _categories.firstWhere((c) => c['name'] == _selectedCategory)['id'];
+            product.categoryId == _categories.firstWhere((c) => c.name == _selectedCategory, orElse: () => CategoryModel(id: '', name: '')).id;
+        
+        // Subcategory filter
+        final matchesSubcategory = _selectedSubcategory == 'All' || 
+            product.subCategoryId == _subcategories.firstWhere((s) => s.name == _selectedSubcategory, orElse: () => SubcategoryModel(id: '', categoryId: '', name: '')).id;
+        
+        // Search filter
         final matchesSearch = _searchQuery.isEmpty || 
             product.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             (product.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
-        return matchesCategory && matchesSearch;
+        
+        return matchesCategory && matchesSubcategory && matchesSearch;
       }).toList();
     });
+  }
+
+  void _onCategoryChanged(String categoryName) {
+    setState(() {
+      _selectedCategory = categoryName;
+      _selectedSubcategory = 'All'; // Reset subcategory when category changes
+    });
+    _filterProducts();
+  }
+
+  void _onSubcategoryChanged(String subcategoryName) {
+    setState(() {
+      _selectedSubcategory = subcategoryName;
+    });
+    _filterProducts();
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+    _filterProducts();
+  }
+
+  List<SubcategoryModel> _getSubcategoriesForCategory(String categoryId) {
+    if (categoryId == 'All') return [];
+    return _subcategories.where((s) => s.categoryId == categoryId).toList();
   }
 
   @override
@@ -189,6 +196,9 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
           
           // Categories
           _buildCategoriesSection(),
+          
+          // Subcategories (if category is selected)
+          if (_selectedCategory != 'All') _buildSubcategoriesSection(),
           
           // Products Grid
           _buildProductsSection(),
@@ -261,10 +271,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
                 ],
               ),
               child: TextField(
-                onChanged: (value) {
-                  _searchQuery = value;
-                  _filterProducts();
-                },
+                onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: 'Search products...',
                   prefixIcon: const Icon(
@@ -291,57 +298,93 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
           opacity: _fadeAnimation,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: _categories.length,
+            itemCount: _categories.length + 1, // +1 for "All" option
             itemBuilder: (context, index) {
-              final category = _categories[index];
-              final isSelected = _selectedCategory == category['name'];
+              if (index == 0) {
+                // "All" option
+                final isSelected = _selectedCategory == 'All';
+                return _buildCategoryChip('All', Icons.all_inclusive, isSelected, () => _onCategoryChanged('All'));
+              }
               
-              return Container(
-                margin: const EdgeInsets.only(right: 16),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _selectedCategory = category['name'];
-                    });
-                    _filterProducts();
-                  },
-                  borderRadius: BorderRadius.circular(25),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    decoration: BoxDecoration(
-                      color: isSelected ? PurviVogueColors.roseGold : Colors.white,
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          category['icon'] as IconData,
-                          color: isSelected ? Colors.white : PurviVogueColors.roseGold,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          category['name'],
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : PurviVogueColors.deepNavy,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+              final category = _categories[index - 1];
+              final isSelected = _selectedCategory == category.name;
+              return _buildCategoryChip(category.name, Icons.category, isSelected, () => _onCategoryChanged(category.name));
             },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubcategoriesSection() {
+    final categoryId = _categories.firstWhere((c) => c.name == _selectedCategory, orElse: () => CategoryModel(id: '', name: '')).id;
+    final subcategories = _getSubcategoriesForCategory(categoryId);
+    
+    if (subcategories.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+    
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 100,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: subcategories.length + 1, // +1 for "All" option
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                // "All" option
+                final isSelected = _selectedSubcategory == 'All';
+                return _buildCategoryChip('All', Icons.all_inclusive, isSelected, () => _onSubcategoryChanged('All'));
+              }
+              
+              final subcategory = subcategories[index - 1];
+              final isSelected = _selectedSubcategory == subcategory.name;
+              return _buildCategoryChip(subcategory.name, Icons.subdirectory_arrow_right, isSelected, () => _onSubcategoryChanged(subcategory.name));
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip(String name, IconData icon, bool isSelected, VoidCallback onTap) {
+    return Container(
+      margin: const EdgeInsets.only(right: 16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(25),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          decoration: BoxDecoration(
+            color: isSelected ? PurviVogueColors.roseGold : Colors.white,
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: isSelected ? Colors.white : PurviVogueColors.roseGold,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                name,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : PurviVogueColors.deepNavy,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -376,6 +419,14 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
                 style: TextStyle(
                   fontSize: 18,
                   color: PurviVogueColors.deepNavy.withOpacity(0.7),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Try adjusting your filters or search terms',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: PurviVogueColors.deepNavy.withOpacity(0.5),
                 ),
               ),
             ],
