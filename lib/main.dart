@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:purvi_vogue/ui/router.dart';
 import 'package:purvi_vogue/ui/splash_screen.dart';
+import 'package:purvi_vogue/ui/landing_page.dart';
 import 'package:purvi_vogue/config/theme_config.dart';
 import 'firebase_options.dart';
 
