@@ -1,12 +1,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Public read for products and categories
+    // Public read for products, categories, subcategories, and banners
     match /products/{document=**} {
       allow read: if true;
       allow write: if isAdmin();
     }
     match /categories/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /subcategories/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /banners/{document=**} {
       allow read: if true;
       allow write: if isAdmin();
     }

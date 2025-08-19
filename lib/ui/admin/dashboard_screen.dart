@@ -83,6 +83,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             .where((e) => e.isNotEmpty)
             .toList(),
         isFeatured: false,
+        subCategoryId: '',
+        gender: ['Men', 'Women'],
+        createdAt: DateTime.now(),
       );
 
       await _db.addProduct(product);

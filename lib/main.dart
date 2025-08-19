@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:purvi_vogue/ui/router.dart';
+import 'package:purvi_vogue/ui/splash_screen.dart';
 import 'package:purvi_vogue/config/theme_config.dart';
 import 'firebase_options.dart';
 
@@ -16,8 +17,21 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _showSplash = true;
+
+  void _onSplashComplete() {
+    setState(() {
+      _showSplash = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +39,9 @@ class MyApp extends StatelessWidget {
       title: 'Purvi Vogue',
       theme: PurviVogueTheme.lightTheme,
       routes: AppRouter.routes,
-      home: const LandingPage(),
+      home: _showSplash 
+        ? SplashScreen(onSplashComplete: _onSplashComplete)
+        : const LandingPage(),
     );
   }
 }
@@ -65,10 +81,13 @@ class LandingPage extends StatelessWidget {
                         color: PurviVogueColors.white.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        Icons.shopping_bag,
-                        size: ResponsiveUtils.isMobile(context) ? 48 : 64,
-                        color: PurviVogueColors.white,
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/app_icon.png',
+                          width: ResponsiveUtils.isMobile(context) ? 48 : 64,
+                          height: ResponsiveUtils.isMobile(context) ? 48 : 64,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(height: ResponsiveUtils.isMobile(context) ? 24 : 32),
