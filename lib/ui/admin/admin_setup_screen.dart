@@ -31,7 +31,7 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
 
   Future<void> _createAdmin() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -41,27 +41,26 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
       );
       return;
     }
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       await _authService.createAdminUser(
         _emailController.text.trim(),
         _passwordController.text,
         _nameController.text.trim(),
       );
-      
+
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Admin user created successfully! You can now login.'),
           backgroundColor: Colors.green,
         ),
       );
-      
+
       Navigator.of(context).pushReplacementNamed('/admin/login');
-      
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,7 +79,6 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
     // Redirect web users away from admin setup
     if (!ResponsiveUtils.isMobile(context)) {
       return Scaffold(
-        backgroundColor: PurviVogueColors.softBeige,
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -115,25 +113,27 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                         const SizedBox(height: 24),
                         Text(
                           'Admin Setup Unavailable',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: PurviVogueColors.deepNavy,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: PurviVogueColors.deepNavy,
+                              ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'Admin functionality is only available on mobile devices for security reasons.',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: PurviVogueColors.charcoalBlack.withOpacity(0.7),
-                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(),
                         ),
                         const SizedBox(height: 24),
                         SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+                            onPressed: () =>
+                                Navigator.of(context).pushReplacementNamed('/'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: PurviVogueColors.roseGold,
                               foregroundColor: PurviVogueColors.white,
@@ -167,10 +167,7 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade900,
-              Colors.purple.shade900,
-            ],
+            colors: [Colors.blue.shade900, Colors.purple.shade900],
           ),
         ),
         child: SafeArea(
@@ -205,24 +202,24 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          
+
                           // Title
                           Text(
                             'Admin Setup',
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade800,
-                            ),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade800,
+                                ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Create your first admin account',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey.shade600,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey.shade600),
                           ),
                           const SizedBox(height: 32),
-                          
+
                           // Name Field
                           TextFormField(
                             controller: _nameController,
@@ -243,7 +240,7 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                             },
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Email Field
                           TextFormField(
                             controller: _emailController,
@@ -261,14 +258,16 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Email is required';
                               }
-                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                              if (!RegExp(
+                                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                              ).hasMatch(value)) {
                                 return 'Please enter a valid email';
                               }
                               return null;
                             },
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Password Field
                           TextFormField(
                             controller: _passwordController,
@@ -277,7 +276,9 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                               prefixIcon: const Icon(Icons.lock_outlined),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                  _obscurePassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -303,7 +304,7 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                             },
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Confirm Password Field
                           TextFormField(
                             controller: _confirmPasswordController,
@@ -312,11 +313,14 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                               prefixIcon: const Icon(Icons.lock_outlined),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                                  _obscureConfirmPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                                    _obscureConfirmPassword =
+                                        !_obscureConfirmPassword;
                                   });
                                 },
                               ),
@@ -335,7 +339,7 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                             },
                           ),
                           const SizedBox(height: 24),
-                          
+
                           // Create Button
                           SizedBox(
                             width: double.infinity,
@@ -356,7 +360,10 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                                       width: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
                                       ),
                                     )
                                   : const Text(
@@ -369,15 +376,15 @@ class _AdminSetupScreenState extends State<AdminSetupScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Back to login
                           TextButton(
-                            onPressed: () => Navigator.of(context).pushReplacementNamed('/admin/login'),
+                            onPressed: () => Navigator.of(
+                              context,
+                            ).pushReplacementNamed('/admin/login'),
                             child: Text(
                               'Back to Login',
-                              style: TextStyle(
-                                color: Colors.grey.shade600,
-                              ),
+                              style: TextStyle(color: Colors.grey.shade600),
                             ),
                           ),
                         ],

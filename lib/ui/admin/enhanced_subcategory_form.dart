@@ -15,7 +15,8 @@ class EnhancedSubcategoryForm extends StatefulWidget {
   });
 
   @override
-  State<EnhancedSubcategoryForm> createState() => _EnhancedSubcategoryFormState();
+  State<EnhancedSubcategoryForm> createState() =>
+      _EnhancedSubcategoryFormState();
 }
 
 class _EnhancedSubcategoryFormState extends State<EnhancedSubcategoryForm> {
@@ -87,8 +88,12 @@ class _EnhancedSubcategoryFormState extends State<EnhancedSubcategoryForm> {
         id: widget.subcategory?.id ?? '',
         categoryId: _selectedCategoryId,
         name: _nameController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-        thumbnailUrl: _thumbnailUrlController.text.trim().isEmpty ? null : _thumbnailUrlController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty
+            ? null
+            : _descriptionController.text.trim(),
+        thumbnailUrl: _thumbnailUrlController.text.trim().isEmpty
+            ? null
+            : _thumbnailUrlController.text.trim(),
       );
 
       if (widget.isEditing) {
@@ -100,7 +105,11 @@ class _EnhancedSubcategoryFormState extends State<EnhancedSubcategoryForm> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.isEditing ? 'Subcategory updated successfully!' : 'Subcategory added successfully!'),
+            content: Text(
+              widget.isEditing
+                  ? 'Subcategory updated successfully!'
+                  : 'Subcategory added successfully!',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -123,14 +132,19 @@ class _EnhancedSubcategoryFormState extends State<EnhancedSubcategoryForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PurviVogueColors.softBeige,
       appBar: AppBar(
-        title: Text(widget.isEditing ? 'Edit Subcategory' : 'Add New Subcategory'),
+        title: Text(
+          widget.isEditing ? 'Edit Subcategory' : 'Add New Subcategory',
+        ),
         backgroundColor: PurviVogueColors.deepNavy,
         foregroundColor: PurviVogueColors.roseGold,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: PurviVogueColors.roseGold))
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: PurviVogueColors.roseGold,
+              ),
+            )
           : Form(
               key: _formKey,
               child: ListView(
@@ -239,7 +253,9 @@ class _EnhancedSubcategoryFormState extends State<EnhancedSubcategoryForm> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : Text(widget.isEditing ? 'Update Subcategory' : 'Add Subcategory'),
+                : Text(
+                    widget.isEditing ? 'Update Subcategory' : 'Add Subcategory',
+                  ),
           ),
         ),
         const SizedBox(width: 16),

@@ -138,9 +138,9 @@ class _SplashScreenState extends State<SplashScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              PurviVogueColors.deepNavy,
-              PurviVogueColors.roseGold.withOpacity(0.8),
-              PurviVogueColors.deepNavy.withOpacity(0.9),
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+              Theme.of(context).colorScheme.primary.withOpacity(0.9),
             ],
             stops: const [0.0, 0.5, 1.0],
           ),
@@ -165,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.shadow,
                                 blurRadius: 20,
                                 spreadRadius: 5,
                                 offset: const Offset(0, 10),
@@ -197,13 +197,13 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Text(
                           'Purvi Vogue',
                           style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                            color: PurviVogueColors.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
                             fontSize: 36,
                             letterSpacing: 2.0,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.shadow,
                                 offset: const Offset(2, 2),
                                 blurRadius: 4,
                               ),
@@ -228,12 +228,12 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Text(
                           'Fashion & Lifestyle',
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: PurviVogueColors.white.withOpacity(0.9),
+                            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
                             fontSize: 18,
                             letterSpacing: 1.5,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.shadow,
                                 offset: const Offset(1, 1),
                                 blurRadius: 2,
                               ),
@@ -258,7 +258,7 @@ class _SplashScreenState extends State<SplashScreen>
                         height: 40,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: PurviVogueColors.white.withOpacity(0.6),
+                            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
                             width: 3,
                           ),
                           borderRadius: BorderRadius.circular(20),
@@ -268,7 +268,7 @@ class _SplashScreenState extends State<SplashScreen>
                             width: 20,
                             height: 20,
                             decoration: BoxDecoration(
-                              color: PurviVogueColors.roseGold,
+                              color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -292,7 +292,7 @@ class _SplashScreenState extends State<SplashScreen>
                             width: 200,
                             height: 4,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Theme.of(context).colorScheme.surface.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(2),
                             ),
                             child: ClipRRect(
@@ -300,7 +300,7 @@ class _SplashScreenState extends State<SplashScreen>
                               child: LinearProgressIndicator(
                                 backgroundColor: Colors.transparent,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  PurviVogueColors.roseGold,
+                                  Theme.of(context).colorScheme.onSurface,
                                 ),
                                 value: _progress,
                               ),
@@ -310,7 +310,7 @@ class _SplashScreenState extends State<SplashScreen>
                           Text(
                             '${(_progress * 100).toInt()}%',
                             style: TextStyle(
-                              color: PurviVogueColors.white.withOpacity(0.8),
+                              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),

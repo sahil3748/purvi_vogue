@@ -30,7 +30,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PurviVogueColors.softBeige,
       appBar: AppBar(
         title: const Text('Purvi Vogue Catalog'),
         backgroundColor: PurviVogueColors.deepNavy,
@@ -48,17 +47,19 @@ class _CatalogScreenState extends State<CatalogScreen> {
               builder: (context, categorySnap) {
                 final categories = categorySnap.data ?? [];
                 if (categories.isEmpty) return const SizedBox.shrink();
-                
+
                 return DropdownButtonFormField<String>(
                   value: _selectedCategoryId,
                   decoration: InputDecoration(
                     labelText: 'Filter by Category',
-                    prefixIcon: const Icon(Icons.filter_list, color: PurviVogueColors.roseGold),
+                    prefixIcon: const Icon(
+                      Icons.filter_list,
+                      color: PurviVogueColors.roseGold,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     filled: true,
-                    fillColor: PurviVogueColors.softBeige,
                   ),
                   items: [
                     const DropdownMenuItem<String>(
@@ -81,7 +82,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               },
             ),
           ),
-          
+
           // Products Grid
           Expanded(
             child: StreamBuilder<List<ProductModel>>(
@@ -91,28 +92,31 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 var items = snap.data ?? [];
-                
+
                 // Filter by category if selected
                 if (_selectedCategoryId != null) {
-                  items = items.where((p) => p.categoryId == _selectedCategoryId).toList();
+                  items = items
+                      .where((p) => p.categoryId == _selectedCategoryId)
+                      .toList();
                 }
-                
+
                 if (items.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.inventory_outlined, 
-                          size: ResponsiveUtils.isMobile(context) ? 48 : 64, 
-                          color: PurviVogueColors.blushPink.withOpacity(0.6)
+                          Icons.inventory_outlined,
+                          size: ResponsiveUtils.isMobile(context) ? 48 : 64,
+                          color: PurviVogueColors.blushPink.withOpacity(0.6),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'No products available',
                           style: TextStyle(
-                            fontSize: ResponsiveUtils.isMobile(context) ? 16 : 18,
-                            color: PurviVogueColors.charcoalBlack.withOpacity(0.7),
+                            fontSize: ResponsiveUtils.isMobile(context)
+                                ? 16
+                                : 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -120,22 +124,31 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         Text(
                           'Check back later for new arrivals',
                           style: TextStyle(
-                            color: PurviVogueColors.charcoalBlack.withOpacity(0.5),
-                            fontSize: ResponsiveUtils.isMobile(context) ? 12 : 14,
+                            fontSize: ResponsiveUtils.isMobile(context)
+                                ? 12
+                                : 14,
                           ),
                         ),
                       ],
                     ),
                   );
                 }
-                
+
                 return GridView.builder(
                   padding: ResponsiveUtils.getScreenPadding(context),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ResponsiveUtils.getGridCrossAxisCount(context).toInt(),
-                    crossAxisSpacing: ResponsiveUtils.isMobile(context) ? 12 : 16,
-                    mainAxisSpacing: ResponsiveUtils.isMobile(context) ? 12 : 16,
-                    childAspectRatio: ResponsiveUtils.getCardAspectRatio(context),
+                    crossAxisCount: ResponsiveUtils.getGridCrossAxisCount(
+                      context,
+                    ).toInt(),
+                    crossAxisSpacing: ResponsiveUtils.isMobile(context)
+                        ? 12
+                        : 16,
+                    mainAxisSpacing: ResponsiveUtils.isMobile(context)
+                        ? 12
+                        : 16,
+                    childAspectRatio: ResponsiveUtils.getCardAspectRatio(
+                      context,
+                    ),
                   ),
                   itemCount: items.length,
                   itemBuilder: (context, i) {
@@ -155,5 +168,3 @@ class _CatalogScreenState extends State<CatalogScreen> {
     );
   }
 }
-
-

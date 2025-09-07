@@ -10,11 +10,7 @@ class EnhancedProductForm extends StatefulWidget {
   final ProductModel? product;
   final bool isEditing;
 
-  const EnhancedProductForm({
-    super.key,
-    this.product,
-    this.isEditing = false,
-  });
+  const EnhancedProductForm({super.key, this.product, this.isEditing = false});
 
   @override
   State<EnhancedProductForm> createState() => _EnhancedProductFormState();
@@ -51,7 +47,14 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
   List<CategoryModel> _categories = [];
   List<SubcategoryModel> _subcategories = [];
   List<String> _availableGenders = ['Women', 'Men', 'Unisex'];
-  List<String> _availableOccasions = ['Festive', 'Casual', 'Wedding', 'Office', 'Party', 'Traditional'];
+  List<String> _availableOccasions = [
+    'Festive',
+    'Casual',
+    'Wedding',
+    'Office',
+    'Party',
+    'Traditional',
+  ];
 
   bool _isLoading = false;
 
@@ -82,10 +85,7 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
-      await Future.wait([
-        _loadCategories(),
-        _loadSubcategories(),
-      ]);
+      await Future.wait([_loadCategories(), _loadSubcategories()]);
     } catch (e) {
       debugPrint('Error loading data: $e');
     } finally {
@@ -113,7 +113,8 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
   Future<void> _loadSubcategories() async {
     try {
       if (_selectedCategoryId.isNotEmpty) {
-        final subcategoriesStream = _firestoreService.watchSubcategoriesByCategory(_selectedCategoryId);
+        final subcategoriesStream = _firestoreService
+            .watchSubcategoriesByCategory(_selectedCategoryId);
         await for (final subcategories in subcategoriesStream) {
           setState(() {
             _subcategories = subcategories;
@@ -168,7 +169,9 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
       final product = ProductModel(
         id: widget.product?.id ?? '',
         name: _nameController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty
+            ? null
+            : _descriptionController.text.trim(),
         priceRange: {
           'min': double.tryParse(_minPriceController.text) ?? 0.0,
           'max': double.tryParse(_maxPriceController.text) ?? 0.0,
@@ -178,14 +181,26 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
         gender: _selectedGenders,
         imageUrls: _imageUrls,
         tags: _selectedTags,
-        material: _materialController.text.trim().isEmpty ? null : _materialController.text.trim(),
-        weight: _weightController.text.trim().isEmpty ? null : _weightController.text.trim(),
-        dimensions: _dimensionsController.text.trim().isEmpty ? null : _dimensionsController.text.trim(),
-        color: _colorController.text.trim().isEmpty ? null : _colorController.text.trim(),
-        careInstructions: _careInstructionsController.text.trim().isEmpty ? null : _careInstructionsController.text.trim(),
+        material: _materialController.text.trim().isEmpty
+            ? null
+            : _materialController.text.trim(),
+        weight: _weightController.text.trim().isEmpty
+            ? null
+            : _weightController.text.trim(),
+        dimensions: _dimensionsController.text.trim().isEmpty
+            ? null
+            : _dimensionsController.text.trim(),
+        color: _colorController.text.trim().isEmpty
+            ? null
+            : _colorController.text.trim(),
+        careInstructions: _careInstructionsController.text.trim().isEmpty
+            ? null
+            : _careInstructionsController.text.trim(),
         inStock: _inStock,
         isFeatured: _isFeatured,
-        styleTips: _styleTipsController.text.trim().isEmpty ? null : _styleTipsController.text.trim(),
+        styleTips: _styleTipsController.text.trim().isEmpty
+            ? null
+            : _styleTipsController.text.trim(),
         occasion: _selectedOccasions,
       );
 
@@ -198,7 +213,11 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.isEditing ? 'Product updated successfully!' : 'Product added successfully!'),
+            content: Text(
+              widget.isEditing
+                  ? 'Product updated successfully!'
+                  : 'Product added successfully!',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -221,14 +240,17 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PurviVogueColors.softBeige,
       appBar: AppBar(
         title: Text(widget.isEditing ? 'Edit Product' : 'Add New Product'),
         backgroundColor: PurviVogueColors.deepNavy,
         foregroundColor: PurviVogueColors.roseGold,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: PurviVogueColors.roseGold))
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: PurviVogueColors.roseGold,
+              ),
+            )
           : Form(
               key: _formKey,
               child: ListView(
@@ -326,7 +348,8 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
                     if (double.tryParse(value) == null) {
                       return 'Please enter a valid number';
                     }
-                    final minPrice = double.tryParse(_minPriceController.text) ?? 0;
+                    final minPrice =
+                        double.tryParse(_minPriceController.text) ?? 0;
                     final maxPrice = double.tryParse(value) ?? 0;
                     if (maxPrice < minPrice) {
                       return 'Max price must be >= min price';
@@ -370,7 +393,9 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
         const SizedBox(height: 16),
         if (_subcategories.isNotEmpty)
           DropdownButtonFormField<String>(
-            value: _selectedSubcategoryId.isEmpty ? null : _selectedSubcategoryId,
+            value: _selectedSubcategoryId.isEmpty
+                ? null
+                : _selectedSubcategoryId,
             decoration: const InputDecoration(
               labelText: 'Subcategory',
               hintText: 'Select a subcategory (optional)',
@@ -388,7 +413,10 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
             },
           ),
         const SizedBox(height: 16),
-        const Text('Target Gender *', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        const Text(
+          'Target Gender *',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -483,7 +511,10 @@ class _EnhancedProductFormState extends State<EnhancedProductForm> {
           maxLines: 2,
         ),
         const SizedBox(height: 16),
-        const Text('Occasions', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        const Text(
+          'Occasions',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,

@@ -19,7 +19,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   String _selectedCategory = 'All';
   String _selectedSubcategory = 'All';
   String _searchQuery = '';
@@ -46,10 +46,10 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.2),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
 
     _startAnimations();
     _loadData();
@@ -70,11 +70,11 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
         _loadSubcategories(),
         _loadProducts(),
       ]);
-      
+
       setState(() {
         _isLoading = false;
       });
-      
+
       _filterProducts();
     } catch (e) {
       setState(() {
@@ -131,18 +131,37 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
     setState(() {
       _filteredProducts = _allProducts.where((product) {
         // Category filter
-        final matchesCategory = _selectedCategory == 'All' || 
-            product.categoryId == _categories.firstWhere((c) => c.name == _selectedCategory, orElse: () => CategoryModel(id: '', name: '')).id;
-        
+        final matchesCategory =
+            _selectedCategory == 'All' ||
+            product.categoryId ==
+                _categories
+                    .firstWhere(
+                      (c) => c.name == _selectedCategory,
+                      orElse: () => CategoryModel(id: '', name: ''),
+                    )
+                    .id;
+
         // Subcategory filter
-        final matchesSubcategory = _selectedSubcategory == 'All' || 
-            product.subCategoryId == _subcategories.firstWhere((s) => s.name == _selectedSubcategory, orElse: () => SubcategoryModel(id: '', categoryId: '', name: '')).id;
-        
+        final matchesSubcategory =
+            _selectedSubcategory == 'All' ||
+            product.subCategoryId ==
+                _subcategories
+                    .firstWhere(
+                      (s) => s.name == _selectedSubcategory,
+                      orElse: () =>
+                          SubcategoryModel(id: '', categoryId: '', name: ''),
+                    )
+                    .id;
+
         // Search filter
-        final matchesSearch = _searchQuery.isEmpty || 
+        final matchesSearch =
+            _searchQuery.isEmpty ||
             product.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            (product.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
-        
+            (product.description?.toLowerCase().contains(
+                  _searchQuery.toLowerCase(),
+                ) ??
+                false);
+
         return matchesCategory && matchesSubcategory && matchesSearch;
       }).toList();
     });
@@ -185,21 +204,20 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PurviVogueColors.softBeige,
       body: CustomScrollView(
         slivers: [
           // App Bar
           _buildAppBar(),
-          
+
           // Search and Filter Section
           _buildSearchSection(),
-          
+
           // Categories
           _buildCategoriesSection(),
-          
+
           // Subcategories (if category is selected)
           if (_selectedCategory != 'All') _buildSubcategoriesSection(),
-          
+
           // Products Grid
           _buildProductsSection(),
         ],
@@ -219,10 +237,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                PurviVogueColors.deepNavy,
-                Color(0xFF2A2A5A),
-              ],
+              colors: [PurviVogueColors.deepNavy, Color(0xFF2A2A5A)],
             ),
           ),
         ),
@@ -241,10 +256,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
         centerTitle: true,
       ),
       leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back,
-          color: PurviVogueColors.roseGold,
-        ),
+        icon: const Icon(Icons.arrow_back, color: PurviVogueColors.roseGold),
         onPressed: () => Navigator.of(context).pop(),
       ),
     );
@@ -303,12 +315,22 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
               if (index == 0) {
                 // "All" option
                 final isSelected = _selectedCategory == 'All';
-                return _buildCategoryChip('All', Icons.all_inclusive, isSelected, () => _onCategoryChanged('All'));
+                return _buildCategoryChip(
+                  'All',
+                  Icons.all_inclusive,
+                  isSelected,
+                  () => _onCategoryChanged('All'),
+                );
               }
-              
+
               final category = _categories[index - 1];
               final isSelected = _selectedCategory == category.name;
-              return _buildCategoryChip(category.name, Icons.category, isSelected, () => _onCategoryChanged(category.name));
+              return _buildCategoryChip(
+                category.name,
+                Icons.category,
+                isSelected,
+                () => _onCategoryChanged(category.name),
+              );
             },
           ),
         ),
@@ -317,11 +339,17 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
   }
 
   Widget _buildSubcategoriesSection() {
-    final categoryId = _categories.firstWhere((c) => c.name == _selectedCategory, orElse: () => CategoryModel(id: '', name: '')).id;
+    final categoryId = _categories
+        .firstWhere(
+          (c) => c.name == _selectedCategory,
+          orElse: () => CategoryModel(id: '', name: ''),
+        )
+        .id;
     final subcategories = _getSubcategoriesForCategory(categoryId);
-    
-    if (subcategories.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
-    
+
+    if (subcategories.isEmpty)
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+
     return SliverToBoxAdapter(
       child: Container(
         height: 100,
@@ -335,12 +363,22 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
               if (index == 0) {
                 // "All" option
                 final isSelected = _selectedSubcategory == 'All';
-                return _buildCategoryChip('All', Icons.all_inclusive, isSelected, () => _onSubcategoryChanged('All'));
+                return _buildCategoryChip(
+                  'All',
+                  Icons.all_inclusive,
+                  isSelected,
+                  () => _onSubcategoryChanged('All'),
+                );
               }
-              
+
               final subcategory = subcategories[index - 1];
               final isSelected = _selectedSubcategory == subcategory.name;
-              return _buildCategoryChip(subcategory.name, Icons.subdirectory_arrow_right, isSelected, () => _onSubcategoryChanged(subcategory.name));
+              return _buildCategoryChip(
+                subcategory.name,
+                Icons.subdirectory_arrow_right,
+                isSelected,
+                () => _onSubcategoryChanged(subcategory.name),
+              );
             },
           ),
         ),
@@ -348,7 +386,12 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
     );
   }
 
-  Widget _buildCategoryChip(String name, IconData icon, bool isSelected, VoidCallback onTap) {
+  Widget _buildCategoryChip(
+    String name,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return Container(
       margin: const EdgeInsets.only(right: 16),
       child: InkWell(
@@ -395,9 +438,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
     if (_isLoading) {
       return const SliverFillRemaining(
         child: Center(
-          child: CircularProgressIndicator(
-            color: PurviVogueColors.roseGold,
-          ),
+          child: CircularProgressIndicator(color: PurviVogueColors.roseGold),
         ),
       );
     }
@@ -439,24 +480,23 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
       padding: const EdgeInsets.all(24),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: ResponsiveUtils.getGridCrossAxisCount(context).toInt(),
+          crossAxisCount: ResponsiveUtils.getGridCrossAxisCount(
+            context,
+          ).toInt(),
           childAspectRatio: ResponsiveUtils.getCardAspectRatio(context),
           crossAxisSpacing: 24,
           mainAxisSpacing: 24,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final product = _filteredProducts[index];
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: _buildProductCard(product),
-              ),
-            );
-          },
-          childCount: _filteredProducts.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final product = _filteredProducts[index];
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: _buildProductCard(product),
+            ),
+          );
+        }, childCount: _filteredProducts.length),
       ),
     );
   }
@@ -490,17 +530,21 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
                     image: DecorationImage(
-                      image: NetworkImage(product.imageUrls.isNotEmpty 
-                          ? product.imageUrls.first 
-                          : 'https://via.placeholder.com/300x400'),
+                      image: NetworkImage(
+                        product.imageUrls.isNotEmpty
+                            ? product.imageUrls.first
+                            : 'https://via.placeholder.com/300x400',
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
-              
+
               // Product Info
               Expanded(
                 flex: 2,
@@ -520,7 +564,7 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
-                      
+
                       if (product.priceRange != null)
                         Text(
                           '\$${product.priceRange!['min']?.toStringAsFixed(2)}',
@@ -530,9 +574,9 @@ class _EnhancedCatalogScreenState extends State<EnhancedCatalogScreen>
                             color: PurviVogueColors.roseGold,
                           ),
                         ),
-                      
+
                       const Spacer(),
-                      
+
                       // Material info
                       if (product.material != null)
                         Text(

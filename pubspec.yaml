@@ -46,6 +46,8 @@ dependencies:
   provider: ^6.1.2
   # Open WhatsApp intents/links
   url_launcher: ^6.3.0
+  # Google Fonts for typography
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

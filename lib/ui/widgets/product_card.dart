@@ -20,9 +20,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.hardEdge,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,10 +34,12 @@ class ProductCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Product Details
           Padding(
-            padding: EdgeInsets.all(ResponsiveUtils.isMobile(context) ? 10.0 : 12.0),
+            padding: EdgeInsets.all(
+              ResponsiveUtils.isMobile(context) ? 10.0 : 12.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,15 +51,14 @@ class ProductCard extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: ResponsiveUtils.isMobile(context) ? 12 : 14,
-                    color: PurviVogueColors.charcoalBlack,
                   ),
                 ),
                 SizedBox(height: ResponsiveUtils.isMobile(context) ? 6 : 8),
-                
+
                 // Category Badge
                 _buildCategoryBadge(context),
                 SizedBox(height: ResponsiveUtils.isMobile(context) ? 6 : 8),
-                
+
                 // Enquire Button
                 _buildEnquireButton(context),
               ],
@@ -143,9 +142,9 @@ class ProductCard extends StatelessWidget {
           (c) => c.id == product.categoryId,
           orElse: () => CategoryModel(id: '', name: ''),
         );
-        
+
         if (category.name.isEmpty) return const SizedBox.shrink();
-        
+
         return Container(
           padding: EdgeInsets.symmetric(
             horizontal: ResponsiveUtils.isMobile(context) ? 4 : 6,
@@ -190,9 +189,7 @@ class ProductCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             vertical: ResponsiveUtils.isMobile(context) ? 6 : 8,
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
     );

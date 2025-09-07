@@ -74,7 +74,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final product = ProductModel(
         id: '',
         name: _nameController.text.trim(),
-        description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
+        description: _descController.text.trim().isEmpty
+            ? null
+            : _descController.text.trim(),
         categoryId: _categoryIdController.text.trim(),
         imageUrls: urls,
         tags: _tagsController.text
@@ -100,10 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() => _pickedImages.clear());
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
       );
     } finally {
       if (mounted) setState(() => _isUploading = false);
@@ -156,17 +155,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           Text(
                             'Welcome to Admin Dashboard',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Manage your products and categories',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withOpacity(0.9),
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Colors.white.withOpacity(0.9),
+                                ),
                           ),
                         ],
                       ),
@@ -215,7 +216,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: StreamBuilder<List<ProductModel>>(
                   stream: _db.watchProducts(),
                   builder: (context, snapshot) {
-                    final featuredCount = snapshot.data?.where((p) => p.isFeatured).length ?? 0;
+                    final featuredCount =
+                        snapshot.data?.where((p) => p.isFeatured).length ?? 0;
                     return _buildStatCard(
                       'Featured',
                       featuredCount.toString(),
@@ -232,9 +234,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Quick Actions
           Text(
             'Quick Actions',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Row(
@@ -279,7 +281,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   'Debug upload configuration',
                   Icons.science,
                   Colors.orange,
-                  () => Navigator.of(context).pushNamed('/admin/cloudinary-test'),
+                  () =>
+                      Navigator.of(context).pushNamed('/admin/cloudinary-test'),
                 ),
               ),
             ],
@@ -289,7 +292,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -330,16 +338,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 12),
           Text(
             title,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey.shade600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionCard(String title, String subtitle, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -364,16 +378,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 16),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey.shade600,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
             ),
           ],
         ),
@@ -391,12 +405,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Text(
               'Add New Product',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
-            
+
             // Product Name
             TextFormField(
               controller: _nameController,
@@ -409,10 +423,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 filled: true,
                 fillColor: Colors.grey.shade50,
               ),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
             const SizedBox(height: 16),
-            
+
             // Description
             TextFormField(
               controller: _descController,
@@ -428,7 +443,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               maxLines: 3,
             ),
             const SizedBox(height: 16),
-            
+
             // Category Dropdown
             StreamBuilder<List<CategoryModel>>(
               stream: _db.watchCategories(),
@@ -436,9 +451,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
+
                 final categories = snapshot.data ?? [];
-                
+
                 if (categories.isEmpty) {
                   return Container(
                     padding: const EdgeInsets.all(16),
@@ -474,16 +489,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.of(context).pushNamed('/admin/categories'),
+                          onPressed: () => Navigator.of(
+                            context,
+                          ).pushNamed('/admin/categories'),
                           child: const Text('Add Categories'),
                         ),
                       ],
                     ),
                   );
                 }
-                
+
                 return DropdownButtonFormField<String>(
-                  value: _categoryIdController.text.isEmpty ? null : _categoryIdController.text,
+                  value: _categoryIdController.text.isEmpty
+                      ? null
+                      : _categoryIdController.text,
                   decoration: InputDecoration(
                     labelText: 'Category',
                     prefixIcon: const Icon(Icons.category),
@@ -504,12 +523,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       _categoryIdController.text = value;
                     }
                   },
-                  validator: (v) => (v == null || v.isEmpty) ? 'Please select a category' : null,
+                  validator: (v) => (v == null || v.isEmpty)
+                      ? 'Please select a category'
+                      : null,
                 );
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Tags
             TextFormField(
               controller: _tagsController,
@@ -524,16 +545,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Image Upload Section
             Text(
               'Product Images',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -562,7 +583,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               right: 4,
                               top: 4,
                               child: GestureDetector(
-                                onTap: () => setState(() => _pickedImages.remove(f)),
+                                onTap: () =>
+                                    setState(() => _pickedImages.remove(f)),
                                 child: Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: const BoxDecoration(
@@ -576,7 +598,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       GestureDetector(
@@ -587,12 +609,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           decoration: BoxDecoration(
                             color: Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              style: BorderStyle.solid,
+                            ),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_a_photo, color: Colors.grey.shade600),
+                              Icon(
+                                Icons.add_a_photo,
+                                color: Colors.grey.shade600,
+                              ),
                               const SizedBox(height: 4),
                               Text(
                                 'Add Image',
@@ -611,7 +639,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Save Button
             SizedBox(
               width: double.infinity,
@@ -631,7 +659,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text(
@@ -652,7 +682,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PurviVogueColors.softBeige,
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         backgroundColor: PurviVogueColors.deepNavy,
@@ -667,7 +696,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
         ],
       ),
-      body: ResponsiveUtils.isMobile(context) 
+      body: ResponsiveUtils.isMobile(context)
           ? _buildMobileLayout(context)
           : _buildDesktopLayout(context),
     );
@@ -729,9 +758,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         // Mobile Content
-        Expanded(
-          child: _buildContent(context),
-        ),
+        Expanded(child: _buildContent(context)),
       ],
     );
   }
@@ -743,90 +770,64 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
           width: 250,
           color: PurviVogueColors.white,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: PurviVogueColors.roseGold.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.admin_panel_settings,
-                          color: PurviVogueColors.roseGold,
-                        ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: PurviVogueColors.roseGold.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Purvi Vogue',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: PurviVogueColors.deepNavy,
-                        ),
+                      child: Icon(
+                        Icons.admin_panel_settings,
+                        color: PurviVogueColors.roseGold,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Purvi Vogue',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: PurviVogueColors.deepNavy,
+                      ),
+                    ),
+                  ],
                 ),
-                const Divider(),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      _buildNavItem(
-                        'Dashboard',
-                        Icons.dashboard,
-                        0,
-                      ),
-                      _buildNavItem(
-                        'Add Product',
-                        Icons.add_circle,
-                        1,
-                      ),
-                      _buildNavItem(
-                        'Products',
-                        Icons.inventory,
-                        2,
-                      ),
-                      _buildNavItem(
-                        'Categories',
-                        Icons.category,
-                        3,
-                      ),
-                      _buildNavItem(
-                        'Orders',
-                        Icons.shopping_cart,
-                        4,
-                      ),
-                      _buildNavItem(
-                        'Analytics',
-                        Icons.analytics,
-                        5,
-                      ),
-                    ],
-                  ),
+              ),
+              const Divider(),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildNavItem('Dashboard', Icons.dashboard, 0),
+                    _buildNavItem('Add Product', Icons.add_circle, 1),
+                    _buildNavItem('Products', Icons.inventory, 2),
+                    _buildNavItem('Categories', Icons.category, 3),
+                    _buildNavItem('Orders', Icons.shopping_cart, 4),
+                    _buildNavItem('Analytics', Icons.analytics, 5),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          // Main Content
-          Expanded(
-            child: _buildContent(context),
-          ),
-        ],
-      );
+        ),
+        // Main Content
+        Expanded(child: _buildContent(context)),
+      ],
+    );
   }
 
   Widget _buildContent(BuildContext context) {
     return _selectedIndex == 0
         ? _buildDashboardContent()
         : _selectedIndex == 1
-            ? _buildAddProductForm()
-            : _buildDashboardContent(); // Placeholder for other sections
+        ? _buildAddProductForm()
+        : _buildDashboardContent(); // Placeholder for other sections
   }
 
   Widget _buildMobileNavItem(String title, IconData icon, int index) {
@@ -850,17 +851,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? PurviVogueColors.white : PurviVogueColors.charcoalBlack.withOpacity(0.6),
-              size: 20,
-            ),
+            Icon(icon, size: 20),
             const SizedBox(height: 4),
             Text(
               title,
               style: TextStyle(
                 fontSize: 10,
-                color: isSelected ? PurviVogueColors.white : PurviVogueColors.charcoalBlack.withOpacity(0.6),
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -873,14 +869,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildNavItem(String title, IconData icon, int index) {
     final isSelected = _selectedIndex == index;
     return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? PurviVogueColors.roseGold : PurviVogueColors.charcoalBlack.withOpacity(0.6),
-      ),
+      leading: Icon(icon),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? PurviVogueColors.roseGold : PurviVogueColors.charcoalBlack,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),
@@ -898,5 +890,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-
-

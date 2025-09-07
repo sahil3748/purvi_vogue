@@ -26,19 +26,19 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       await _authService.signInWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       // Check if user is admin
       final isAdmin = await _authService.isAdmin();
       if (!mounted) return;
-      
+
       if (!isAdmin) {
         await _authService.signOut();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -49,10 +49,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         );
         return;
       }
-      
+
       // Success - navigate to dashboard
       Navigator.of(context).pushReplacementNamed('/admin/dashboard');
-      
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +70,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     // Redirect web users away from admin login
     if (!ResponsiveUtils.isMobile(context)) {
       return Scaffold(
-        backgroundColor: PurviVogueColors.softBeige,
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -106,25 +104,27 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         const SizedBox(height: 24),
                         Text(
                           'Admin Login Unavailable',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: PurviVogueColors.deepNavy,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: PurviVogueColors.deepNavy,
+                              ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'Admin functionality is only available on mobile devices for security reasons.',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: PurviVogueColors.charcoalBlack.withOpacity(0.7),
-                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(),
                         ),
                         const SizedBox(height: 24),
                         SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+                            onPressed: () =>
+                                Navigator.of(context).pushReplacementNamed('/'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: PurviVogueColors.roseGold,
                               foregroundColor: PurviVogueColors.white,
@@ -158,10 +158,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade900,
-              Colors.purple.shade900,
-            ],
+            colors: [Colors.blue.shade900, Colors.purple.shade900],
           ),
         ),
         child: SafeArea(
@@ -196,24 +193,24 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          
+
                           // Title
                           Text(
                             'Admin Panel',
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade800,
-                            ),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade800,
+                                ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Sign in to access dashboard',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey.shade600,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey.shade600),
                           ),
                           const SizedBox(height: 32),
-                          
+
                           // Email Field
                           TextFormField(
                             controller: _emailController,
@@ -231,14 +228,16 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Email is required';
                               }
-                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                              if (!RegExp(
+                                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                              ).hasMatch(value)) {
                                 return 'Please enter a valid email';
                               }
                               return null;
                             },
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Password Field
                           TextFormField(
                             controller: _passwordController,
@@ -247,7 +246,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               prefixIcon: const Icon(Icons.lock_outlined),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                  _obscurePassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -273,7 +274,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             },
                           ),
                           const SizedBox(height: 24),
-                          
+
                           // Login Button
                           SizedBox(
                             width: double.infinity,
@@ -294,7 +295,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                       width: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
                                       ),
                                     )
                                   : const Text(
@@ -307,27 +311,27 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Setup and Back links
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               TextButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/admin/setup'),
+                                onPressed: () => Navigator.of(
+                                  context,
+                                ).pushNamed('/admin/setup'),
                                 child: Text(
                                   'Setup Admin',
-                                  style: TextStyle(
-                                    color: Colors.blue.shade600,
-                                  ),
+                                  style: TextStyle(color: Colors.blue.shade600),
                                 ),
                               ),
                               TextButton(
-                                onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+                                onPressed: () => Navigator.of(
+                                  context,
+                                ).pushReplacementNamed('/'),
                                 child: Text(
                                   'Back to Main App',
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                  ),
+                                  style: TextStyle(color: Colors.grey.shade600),
                                 ),
                               ),
                             ],
@@ -345,5 +349,3 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     );
   }
 }
-
-

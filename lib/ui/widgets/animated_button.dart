@@ -41,12 +41,14 @@ class _AnimatedButtonState extends State<AnimatedButton>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _elevationAnimation = Tween<double>(begin: 4.0, end: 8.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _elevationAnimation = Tween<double>(
+      begin: 4.0,
+      end: 8.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -85,8 +87,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
                 width: widget.width,
                 height: widget.height ?? 56,
                 decoration: BoxDecoration(
-                  color: widget.backgroundColor ?? PurviVogueColors.softBeige,
-                  borderRadius: widget.borderRadius ?? BorderRadius.circular(16),
+                  borderRadius:
+                      widget.borderRadius ?? BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
@@ -99,16 +101,21 @@ class _AnimatedButtonState extends State<AnimatedButton>
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: widget.onPressed,
-                    borderRadius: widget.borderRadius ?? BorderRadius.circular(16),
+                    borderRadius:
+                        widget.borderRadius ?? BorderRadius.circular(16),
                     child: Container(
-                      padding: widget.padding ?? const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 16,
-                      ),
+                      padding:
+                          widget.padding ??
+                          const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 16,
+                          ),
                       child: Center(
                         child: DefaultTextStyle(
                           style: TextStyle(
-                            color: widget.foregroundColor ?? PurviVogueColors.deepNavy,
+                            color:
+                                widget.foregroundColor ??
+                                PurviVogueColors.deepNavy,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),

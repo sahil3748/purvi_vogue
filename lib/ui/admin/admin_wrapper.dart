@@ -5,7 +5,7 @@ import 'package:purvi_vogue/config/theme_config.dart';
 
 class AdminWrapper extends StatefulWidget {
   final Widget child;
-  
+
   const AdminWrapper({super.key, required this.child});
 
   @override
@@ -44,7 +44,6 @@ class _AdminWrapperState extends State<AdminWrapper> {
     // Redirect web users away from admin pages
     if (!ResponsiveUtils.isMobile(context)) {
       return Scaffold(
-        backgroundColor: PurviVogueColors.softBeige,
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -79,25 +78,27 @@ class _AdminWrapperState extends State<AdminWrapper> {
                         const SizedBox(height: 24),
                         Text(
                           'Admin Panel Unavailable',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: PurviVogueColors.deepNavy,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: PurviVogueColors.deepNavy,
+                              ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'Admin functionality is only available on mobile devices for security reasons.',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: PurviVogueColors.charcoalBlack.withOpacity(0.7),
-                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(),
                         ),
                         const SizedBox(height: 24),
                         SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+                            onPressed: () =>
+                                Navigator.of(context).pushReplacementNamed('/'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: PurviVogueColors.roseGold,
                               foregroundColor: PurviVogueColors.white,
@@ -126,11 +127,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
     }
 
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (!_isAdmin) {

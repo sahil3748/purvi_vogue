@@ -23,7 +23,7 @@ class _LandingPageState extends State<LandingPage>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
   bool _showMobileMenu = false;
-  
+
   List<CategoryModel> _categories = [];
   final FirestoreService _firestoreService = FirestoreService();
 
@@ -46,10 +46,10 @@ class _LandingPageState extends State<LandingPage>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
@@ -72,7 +72,9 @@ class _LandingPageState extends State<LandingPage>
       final categoriesStream = _firestoreService.watchCategories();
       await for (final categories in categoriesStream) {
         setState(() {
-          _categories = categories.take(3).toList(); // Take first 3 categories for display
+          _categories = categories
+              .take(3)
+              .toList(); // Take first 3 categories for display
         });
         break; // Take first snapshot
       }
@@ -112,23 +114,23 @@ class _LandingPageState extends State<LandingPage>
                 slivers: [
                   // Header
                   _buildHeader(),
-                  
+
                   // Hero Section
                   _buildHeroSection(),
-                  
+
                   // Categories Section
                   _buildCategoriesSection(),
-                  
+
                   // About Section
                   _buildAboutSection(),
-                  
+
                   // Footer
                   _buildFooter(),
                 ],
               ),
             ),
           ),
-          
+
           // Mobile Menu Overlay
           if (_showMobileMenu)
             MobileMenu(
@@ -230,8 +232,8 @@ class _LandingPageState extends State<LandingPage>
       child: TextButton(
         onPressed: () {},
         style: TextButton.styleFrom(
-          foregroundColor: isActive 
-              ? PurviVogueColors.roseGold 
+          foregroundColor: isActive
+              ? PurviVogueColors.roseGold
               : Colors.white.withOpacity(0.8),
         ),
         child: Text(
@@ -294,7 +296,8 @@ class _LandingPageState extends State<LandingPage>
                         ),
                         const SizedBox(height: 48),
                         AnimatedButton(
-                          onPressed: () => Navigator.of(context).pushNamed('/catalog'),
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed('/catalog'),
                           child: const Text(
                             'SHOP NOW',
                             style: TextStyle(
@@ -335,7 +338,6 @@ class _LandingPageState extends State<LandingPage>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              PurviVogueColors.softBeige,
                               PurviVogueColors.blushPink.withOpacity(0.3),
                             ],
                           ),
@@ -392,7 +394,8 @@ class _LandingPageState extends State<LandingPage>
                         ),
                         const SizedBox(height: 40),
                         AnimatedButton(
-                          onPressed: () => Navigator.of(context).pushNamed('/catalog'),
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed('/catalog'),
                           child: const Text(
                             'SHOP NOW',
                             style: TextStyle(
@@ -417,7 +420,6 @@ class _LandingPageState extends State<LandingPage>
   Widget _buildCategoriesSection() {
     return SliverToBoxAdapter(
       child: Container(
-        color: PurviVogueColors.softBeige,
         padding: ResponsiveUtils.getScreenPadding(context),
         child: Column(
           children: [
@@ -531,10 +533,7 @@ class _LandingPageState extends State<LandingPage>
                 const SizedBox(width: 8),
                 Text(
                   '+128-486-7800',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
                 const SizedBox(width: 32),
                 Container(
@@ -551,10 +550,7 @@ class _LandingPageState extends State<LandingPage>
                 const SizedBox(width: 8),
                 Text(
                   'info@purvivogue.com',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
               ],
             ),
@@ -568,16 +564,12 @@ class _LandingPageState extends State<LandingPage>
   Widget _buildFooter() {
     return SliverToBoxAdapter(
       child: Container(
-        color: PurviVogueColors.charcoalBlack,
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
             const Text(
               '© 2024 Purvi Vogue. All rights reserved.',
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.white54, fontSize: 14),
             ),
             const SizedBox(height: 16),
             Row(
@@ -606,11 +598,7 @@ class _LandingPageState extends State<LandingPage>
           color: PurviVogueColors.roseGold.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Icon(
-          icon,
-          color: PurviVogueColors.roseGold,
-          size: 24,
-        ),
+        child: Icon(icon, color: PurviVogueColors.roseGold, size: 24),
       ),
     );
   }
