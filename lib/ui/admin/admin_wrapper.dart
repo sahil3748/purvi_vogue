@@ -134,6 +134,8 @@ class _AdminWrapperState extends State<AdminWrapper> {
       return const AdminLoginScreen();
     }
 
+    // For mobile devices, wrap the child with navigation layout
+    // The child will determine its own route for breadcrumbs
     return widget.child;
   }
 }

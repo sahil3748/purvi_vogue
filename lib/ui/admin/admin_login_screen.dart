@@ -311,31 +311,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-
-                          // Setup and Back links
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () => Navigator.of(
-                                  context,
-                                ).pushNamed('/admin/setup'),
-                                child: Text(
-                                  'Setup Admin',
-                                  style: TextStyle(color: Colors.blue.shade600),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(
-                                  context,
-                                ).pushReplacementNamed('/'),
-                                child: Text(
-                                  'Back to Main App',
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),

@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class BannerModel {
   final String id;
   final String title;
+
   final String imageUrl;
   final String ctaText;
+
   final String linkCategoryId;
 
   BannerModel({

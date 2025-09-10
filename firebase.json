@@ -1,1 +1,44 @@
-{"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"android":{"default":{"projectId":"purvi-vogue","appId":"1:1085054651658:android:9f9b9dcabcaac243c23ef3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"purvi-vogue","configurations":{"android":"1:1085054651658:android:9f9b9dcabcaac243c23ef3","ios":"1:1085054651658:ios:9cd8f9896eba7581c23ef3","macos":"1:1085054651658:ios:9cd8f9896eba7581c23ef3","web":"1:1085054651658:web:cc2a7f93f877e900c23ef3","windows":"1:1085054651658:web:4a823dc74f607bdcc23ef3"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "purvi-vogue",
+          "appId": "1:1085054651658:android:9f9b9dcabcaac243c23ef3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "purvi-vogue",
+          "configurations": {
+            "android": "1:1085054651658:android:9f9b9dcabcaac243c23ef3",
+            "ios": "1:1085054651658:ios:9cd8f9896eba7581c23ef3",
+            "macos": "1:1085054651658:ios:9cd8f9896eba7581c23ef3",
+            "web": "1:1085054651658:web:cc2a7f93f877e900c23ef3",
+            "windows": "1:1085054651658:web:4a823dc74f607bdcc23ef3"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "site": "purvi-vogue",
+    "cleanUrls": true,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
